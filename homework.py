@@ -18,10 +18,10 @@ class InfoMessage:
         information_message = asdict(self)
         return (
             'Тип тренировки: {training_type}; '
-            'Длительность: {duration: .3f} ч.; '
-            'Дистанция: {distance: .3f} км; '
-            'Ср. скорость: {speed: .3f} км/ч; '
-            'Потрачено ккал: {calories: .3f}.'.format(**information_message))
+            'Длительность: {duration:.3f} ч.; '
+            'Дистанция: {distance:.3f} км; '
+            'Ср. скорость: {speed:.3f} км/ч; '
+            'Потрачено ккал: {calories:.3f}.'.format(**information_message))
 
 
 class Training:
@@ -129,9 +129,9 @@ def read_package(workout_type: str, data: List[int]) -> Training:
 
     acronym: Dict[str, Training]
     acronym = {'SWM': Swimming, 'RUN': Running, 'WLK': SportsWalking}
-    if workout_type not in acronym:
-        raise KeyError('Тип тренировки не определен')
-    return acronym[workout_type](*data)
+    if workout_type in acronym:
+        return acronym[workout_type](*data)
+    raise KeyError('Тип тренировки не определен')
 
 
 def main(training: Training) -> None:
