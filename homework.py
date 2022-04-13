@@ -1,9 +1,9 @@
 from dataclasses import asdict, dataclass
 from typing import Dict, List, Type
 
-type_Training_1 = 'SWM'
-type_Training_2 = 'RUN'
-type_Training_3 = 'WLK'
+SWIMMING_WORKOUT: str = 'SWM'
+RUNNING_WORKOUT: str = 'RUN'
+SPOTSWALKING_WORKOUT: str = 'WLK'
 
 
 @dataclass
@@ -142,9 +142,9 @@ def main(training: Training) -> None:
 
 if __name__ == '__main__':
     packages = [
-        (type_Training_1, [720, 1, 80, 25, 40]),
-        (type_Training_2, [15000, 1, 75]),
-        (type_Training_3, [9000, 1, 75, 180]),
+        (SWIMMING_WORKOUT, [720, 1, 80, 25, 40]),
+        (RUNNING_WORKOUT, [15000, 1, 75]),
+        (SPOTSWALKING_WORKOUT, [9000, 1, 75, 180]),
     ]
 
     for workout_type, data in packages:
