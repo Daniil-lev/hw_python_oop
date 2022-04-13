@@ -1,5 +1,9 @@
-from dataclasses import dataclass, asdict
-from typing import List, Dict
+from dataclasses import asdict, dataclass
+from typing import Dict, List, Type
+
+type_Training_1 = 'SWM'
+type_Training_2 = 'RUN'
+type_Training_3 = 'WLK'
 
 
 @dataclass
@@ -15,13 +19,13 @@ class InfoMessage:
     calories: float
 
     def get_message(self) -> str:
-        information_message = asdict(self)
         return (
             'Тип тренировки: {training_type}; '
             'Длительность: {duration:.3f} ч.; '
             'Дистанция: {distance:.3f} км; '
             'Ср. скорость: {speed:.3f} км/ч; '
-            'Потрачено ккал: {calories:.3f}.'.format(**information_message))
+            'Потрачено ккал: {calories:.3f}.'
+        ).format(**asdict(self))
 
 
 class Training:
@@ -89,9 +93,8 @@ class SportsWalking(Training):
         self.height = height
 
     def get_spent_calories(self) -> float:
-        SPEED_COEFFICIENT = self.get_mean_speed() ** 2
         return ((self.WALKING_COEFFICIENT_1 * self.weihgt
-                 + (SPEED_COEFFICIENT // self.height)
+                 + (self.get_mean_speed() ** 2 // self.height)
                  * self.WALKING_COEFFICIENT_1 * self.weihgt)
                 * self.duration * self.MIN_IN_HOUR)
 
@@ -112,9 +115,6 @@ class Swimming(Training):
         self.length_pool = length_pool
         self.count_pool = count_pool
 
-    def get_distance(self) -> float:
-        return self.action * self.LEN_STEP / self.M_IN_KM
-
     def get_mean_speed(self) -> float:
         return (self.length_pool * self.count_pool
                 / self.M_IN_KM / self.duration)
@@ -124,14 +124,14 @@ class Swimming(Training):
                 * self.SWIM_COEF_2 * self.weihgt)
 
 
-def read_package(workout_type: str, data: List[int]) -> Training:
+def read_package(workout_type: str, data: List[int]) -> Type[Training]:
     """Прочитать данные полученные от датчиков."""
 
-    acronym: Dict[str, Training]
-    acronym = {'SWM': Swimming, 'RUN': Running, 'WLK': SportsWalking}
-    if workout_type in acronym:
-        return acronym[workout_type](*data)
-    raise KeyError('Тип тренировки не определен')
+    workout_types: Dict = {str, Type[Training]}
+    workout_types = {'SWM': Swimming, 'RUN': Running, 'WLK': SportsWalking}
+    if workout_type in workout_types:
+        return workout_types[workout_type](*data)
+    raise ValueError('Тип тренировки не определен')
 
 
 def main(training: Training) -> None:
@@ -142,9 +142,9 @@ def main(training: Training) -> None:
 
 if __name__ == '__main__':
     packages = [
-        ('SWM', [720, 1, 80, 25, 40]),
-        ('RUN', [15000, 1, 75]),
-        ('WLK', [9000, 1, 75, 180]),
+        (type_Training_1, [720, 1, 80, 25, 40]),
+        (type_Training_2, [15000, 1, 75]),
+        (type_Training_3, [9000, 1, 75, 180]),
     ]
 
     for workout_type, data in packages:
