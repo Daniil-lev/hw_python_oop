@@ -8,9 +8,11 @@ SPOTSWALKING_WORKOUT: str = 'WLK'
 
 @dataclass
 class InfoMessage:
-    """Информационное сообщение о тренировке.
+    """
+    Информационное сообщение о тренировке.
     тип тренировки, длительность, дистанция,
-    средняя скорость, потрачено килокалорий"""
+    средняя скорость, потрачено килокалорий
+    """
 
     training_type: str
     duration: float
@@ -127,8 +129,9 @@ class Swimming(Training):
 def read_package(workout_type: str, data: List[int]) -> Type[Training]:
     """Прочитать данные полученные от датчиков."""
 
-    workout_types: Dict = {str, Type[Training]}
-    workout_types = {'SWM': Swimming, 'RUN': Running, 'WLK': SportsWalking}
+    workout_types: Dict[str, Type[Training]] = {'SWM': Swimming,
+                                                'RUN': Running,
+                                                'WLK': SportsWalking}
     if workout_type in workout_types:
         return workout_types[workout_type](*data)
     raise ValueError('Тип тренировки не определен')
